@@ -6,9 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -17,7 +15,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Arial', sans-serif;
+  font-family: Arial, sans-serif;
   overflow: hidden;
   color: white;
 }
@@ -30,7 +28,7 @@ body {
   width: 90%;
   max-width: 360px;
   position: relative;
-  z-index: 2;
+  z-index: 10;
 }
 
 h1 {
@@ -60,9 +58,13 @@ button {
   animation: pulse 1.5s infinite;
 }
 
-button:hover {
-  transform: scale(1.08);
+.no {
+  background: #555;
+  color: white;
+  position: absolute;
 }
+
+button:hover { transform: scale(1.08); }
 
 @keyframes pulse {
   0% { box-shadow: 0 0 0 0 rgba(255,30,86,0.7); }
@@ -74,30 +76,60 @@ button:hover {
   display: none;
   font-size: 26px;
   font-weight: bold;
-  animation: fadeIn 1s ease-in-out;
+  animation: pop 0.8s ease-out;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.8); }
-  to { opacity: 1; transform: scale(1); }
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  70% { transform: scale(1.15); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-/* Floating hearts */
-.heart {
+/* Floating emojis & hearts */
+.float {
   position: absolute;
   bottom: -20px;
-  font-size: 20px;
-  animation: float 6s linear infinite;
-  opacity: 0.8;
+  animation: float 6s linear forwards;
+  opacity: 0.9;
 }
 
 @keyframes float {
-  from {
-    transform: translateY(0) translateX(0);
-    opacity: 1;
-  }
   to {
-    transform: translateY(-100vh) translateX(30px);
+    transform: translateY(-110vh) translateX(var(--drift));
+    opacity: 0;
+  }
+}
+
+/* Confetti */
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 14px;
+  background: hsl(var(--hue), 100%, 50%);
+  top: -10px;
+  animation: confettiFall 3s linear forwards;
+}
+
+@keyframes confettiFall {
+  to {
+    transform: translateY(110vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* Fireworks */
+.firework {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: gold;
+  animation: explode 1s ease-out forwards;
+}
+
+@keyframes explode {
+  to {
+    transform: scale(8);
     opacity: 0;
   }
 }
@@ -107,40 +139,72 @@ button:hover {
 <body>
 
 <div class="container">
-  <h1 id="question">Will you be my valentine Gowshika? 💖</h1>
+  <h1 id="question">Will you be my Valentine, Gowshika? 💖</h1>
 
   <button class="yes" onclick="accept()">Yes</button>
   <button class="def" onclick="accept()">Definitely Yes</button>
+  <button class="no" id="noBtn">No</button>
 
-  <div id="result">💘 Valentine Matched – GT 💘</div>
+  <div id="result">💘 Valentine Matched – GT & Gowshika 💘</div>
 </div>
 
-<audio id="sound">
-  <source src="https://www.soundjay.com/human/sounds/applause-01.mp3">
+<audio id="sound" preload="auto">
+  <source src="https://www.soundjay.com/human/sounds/applause-01.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+const emojis = ["❤️","💖","💕","😍","😘","💘","💞"];
+
 function accept() {
   document.getElementById("question").style.display = "none";
   document.querySelectorAll("button").forEach(b => b.style.display = "none");
   document.getElementById("result").style.display = "block";
   document.getElementById("sound").play();
+
+  confetti();
+  fireworks();
 }
 
-// create floating hearts
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
-  document.body.appendChild(heart);
+document.getElementById("noBtn").addEventListener("mouseover", () => {
+  const btn = document.getElementById("noBtn");
+  btn.style.top = Math.random() * 70 + "%";
+  btn.style.left = Math.random() * 70 + "%";
+});
 
-  setTimeout(() => {
-    heart.remove();
-  }, 6000);
+setInterval(() => {
+  const el = document.createElement("div");
+  el.className = "float";
+  el.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+  el.style.left = Math.random() * 100 + "vw";
+  el.style.fontSize = (Math.random() * 20 + 16) + "px";
+  el.style.setProperty("--drift", (Math.random() * 100 - 50) + "px");
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 6000);
 }, 300);
+
+function confetti() {
+  for (let i = 0; i < 80; i++) {
+    const c = document.createElement("div");
+    c.className = "confetti";
+    c.style.left = Math.random() * 100 + "vw";
+    c.style.setProperty("--hue", Math.random() * 360);
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 3000);
+  }
+}
+
+function fireworks() {
+  for (let i = 0; i < 6; i++) {
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = Math.random() * 100 + "vw";
+    f.style.top = Math.random() * 50 + "vh";
+    document.body.appendChild(f);
+    setTimeout(() => f.remove(), 1000);
+  }
+}
 </script>
 
 </body>
 </html>
+
