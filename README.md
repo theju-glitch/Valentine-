@@ -1,2 +1,212 @@
-# Valentine-
-Valentine 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>My Valentine 💖</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Playfair+Display:wght@600&display=swap');
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  background:
+    radial-gradient(circle at top, #ff9a9e, transparent 60%),
+    linear-gradient(135deg, #ff416c, #ff4b2b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Poppins', sans-serif;
+  overflow: hidden;
+  color: white;
+}
+
+.container {
+  backdrop-filter: blur(18px);
+  background: rgba(255,255,255,0.15);
+  border-radius: 30px;
+  padding: 40px 30px;
+  text-align: center;
+  width: 90%;
+  max-width: 380px;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.35);
+  position: relative;
+  z-index: 5;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  margin-bottom: 35px;
+  text-shadow: 0 0 15px rgba(255,255,255,0.35);
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin: 12px 0;
+  font-size: 18px;
+  border: none;
+  border-radius: 40px;
+  cursor: pointer;
+  transition: all 0.35s ease;
+}
+
+.yes {
+  background: linear-gradient(135deg, #fff, #ffe4ec);
+  color: #ff416c;
+  font-weight: 600;
+}
+
+.no {
+  background: rgba(255,255,255,0.25);
+  color: white;
+  position: absolute;
+}
+
+button:hover {
+  transform: scale(1.06);
+}
+
+#result {
+  display: none;
+  font-family: 'Playfair Display', serif;
+  font-size: 30px;
+  animation: reveal 1s ease forwards;
+}
+
+@keyframes reveal {
+  from { opacity: 0; transform: scale(0.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* floating hearts */
+.float {
+  position: absolute;
+  bottom: -30px;
+  animation: float 8s ease-in forwards;
+  opacity: 0.85;
+}
+
+@keyframes float {
+  to {
+    transform: translateY(-120vh) translateX(var(--drift));
+    opacity: 0;
+  }
+}
+
+/* confetti */
+.confetti {
+  position: absolute;
+  width: 6px;
+  height: 14px;
+  background: hsl(var(--hue), 100%, 60%);
+  top: -20px;
+  animation: confetti 4s linear forwards;
+}
+
+@keyframes confetti {
+  to {
+    transform: translateY(120vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* fireworks */
+.firework {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, #fff, gold);
+  animation: explode 1.2s ease-out forwards;
+}
+
+@keyframes explode {
+  to {
+    transform: scale(10);
+    opacity: 0;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1 id="question">Will you be my Valentine, Gowshika? 💖</h1>
+
+  <button class="yes" onclick="accept()">Yes 💕</button>
+  <button class="no" id="noBtn">No 🙈</button>
+
+  <div id="result">💖 Matched Forever 💖<br>GT & Gowshika</div>
+</div>
+
+<audio id="sound" preload="auto">
+  <source src="https://www.soundjay.com/human/sounds/applause-01.mp3">
+</audio>
+
+<script>
+const emojis = ["❤️","💖","✨","💫","💕","💘"];
+
+function accept() {
+  question.style.display = "none";
+  document.querySelectorAll("button").forEach(b => b.style.display = "none");
+  result.style.display = "block";
+  sound.play();
+  confetti();
+  fireworks();
+}
+
+/* No button runs away */
+const noBtn = document.getElementById("noBtn");
+noBtn.addEventListener("mouseover", moveNo);
+noBtn.addEventListener("click", moveNo);
+
+function moveNo() {
+  noBtn.style.top = Math.random() * 70 + "%";
+  noBtn.style.left = Math.random() * 70 + "%";
+}
+
+/* Floating hearts */
+setInterval(() => {
+  const h = document.createElement("div");
+  h.className = "float";
+  h.innerHTML = emojis[Math.floor(Math.random()*emojis.length)];
+  h.style.left = Math.random()*100 + "vw";
+  h.style.fontSize = Math.random()*20 + 18 + "px";
+  h.style.setProperty("--drift", (Math.random()*100-50)+"px");
+  document.body.appendChild(h);
+  setTimeout(()=>h.remove(),8000);
+}, 450);
+
+/* Confetti */
+function confetti() {
+  for(let i=0;i<90;i++){
+    const c=document.createElement("div");
+    c.className="confetti";
+    c.style.left=Math.random()*100+"vw";
+    c.style.setProperty("--hue",Math.random()*360);
+    document.body.appendChild(c);
+    setTimeout(()=>c.remove(),4000);
+  }
+}
+
+/* Fireworks */
+function fireworks(){
+  for(let i=0;i<7;i++){
+    const f=document.createElement("div");
+    f.className="firework";
+    f.style.left=Math.random()*100+"vw";
+    f.style.top=Math.random()*60+"vh";
+    document.body.appendChild(f);
+    setTimeout(()=>f.remove(),1200);
+  }
+}
+</script>
+
+</body>
+</html>
