@@ -152,7 +152,6 @@ function accept() {
   question.style.display = "none";
   document.querySelectorAll("button").forEach(b => b.style.display = "none");
   result.style.display = "block";
-  sound.play();
   confetti();
   fireworks();
 }
